@@ -1,0 +1,5 @@
+---
+nextcloud_version: 3.3.5
+nextcloud_download_url: >
+      https://github.com/nextcloud-releases/desktop/releases/download/v{{ nextcloud_version }}/Nextcloud-{{ nextcloud_version }}-x86_64.AppImage
+nextcloud_appimage: /opt/nextcloud-{{ nextcloud_version }}.AppImage
