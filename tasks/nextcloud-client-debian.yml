@@ -1,14 +1,26 @@
 ---
-- name: Define Nextcloud download URL and local AppImage path
-  ansible.builtin.set_fact:
-    nextcloud_download_url: >
-      https://github.com/nextcloud-releases/desktop/releases/download/v{{ nextcloud_version }}/Nextcloud-{{ nextcloud_version }}-x86_64.AppImage
-    nextcloud_appimage: /opt/nextcloud-{{ nextcloud_version }}.AppImage
+- name: Update apt cache
+  ansible.builtin.apt:
+    update_cache: yes
+    cache_valid_time: 3600
+
+
+- name: Ensure dependencies are installed
+  ansible.builtin.package:
+    name: "{{ item }}"
+    state: present
+  loop:
+    - fontconfig
+    - libasound2
+    - libfuse2
+    - libgl1
+
 
 - name: Check install status
   ansible.builtin.stat:
     path: "{{ nextcloud_appimage }}"
   register: _nextcloud_install_status
+
 
 - name: Download Nextcloud official AppImage
   become: true
@@ -17,6 +29,7 @@
     dest: "{{ nextcloud_appimage }}"
     mode: "0555"
   when: not _nextcloud_install_status.stat.exists
+
 
 - name: Create symbolic link
   become: true
